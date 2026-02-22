@@ -3,3 +3,4 @@ discord-ext-bot
 ffmpeg
 PyNaCl
 yt-dlp
+wavelink
