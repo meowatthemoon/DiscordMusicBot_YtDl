@@ -36,7 +36,18 @@ class SongSearchModal(Modal, title = "What song do you want to search for?"):
         user = interaction.user
         query = self.song_name.value
 
-        results = await search_ytdlp_async(f"ytsearch{NUMBER_SONGS_PER_SEARCH}: {query}", YDL_OPTIONS)
+        try:
+            results = await asyncio.wait_for(
+                search_ytdlp_async(
+                    f"ytsearch{NUMBER_SONGS_PER_SEARCH}: {query}",
+                    YDL_OPTIONS
+                ),
+                timeout = 15# seconds
+            )
+        except asyncio.TimeoutError:
+            return await interaction.edit_original_response(
+                content = "An error occurred and the request timed out ⏱️. Please try again."
+            )
         tracks = results.get("entries", [])
 
         if len(tracks) == 0:

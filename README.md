@@ -22,7 +22,7 @@ uv pip install -U "yt-dlp[default]"
 # Run
 
 ```
-python3 main.py
+uv run main.py
 ```
 
 - In discord run /setup_music_bot and enjoy!

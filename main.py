@@ -1,17 +1,18 @@
 import discord
 from discord.ext import commands
 
-from config import COGS_FOLDER, TOKEN, COMMAND_PREFIX
+from config import COGS_FOLDER, COMMAND_PREFIX
+from secret import TOKEN
 
 class Bot(commands.Bot):
     def __init__(self, prefix : str):
         super().__init__(command_prefix = prefix, case_insensitive = True, intents = discord.Intents.all())
 
     async def setup_hook(self):
-        import os
-        os.makedirs(COGS_FOLDER, exist_ok = True)
+        from os import makedirs, listdir
+        makedirs(COGS_FOLDER, exist_ok = True)
 
-        cogs = [filename[:-3] for filename in os.listdir(COGS_FOLDER) if filename.endswith(".py")]
+        cogs = [filename[:-3] for filename in listdir(COGS_FOLDER) if filename.endswith(".py")]
         for cog in cogs:
             await self.load_extension(f"cogs.{cog}")
             print(f"Loaded Cog : {cog}.")

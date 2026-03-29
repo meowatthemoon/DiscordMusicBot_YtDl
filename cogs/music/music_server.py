@@ -45,6 +45,8 @@ class MusicServer:
         self.player = PlayerMenu(bot = self.__bot)
         self.player.set_message(message = await self.text_channel.send(content = "", view = self.player))
 
+
+
     async def on_track_selection_callback(self, interaction : Interaction, track : list[Playable], object : PaginationMenu):
         del object            
         

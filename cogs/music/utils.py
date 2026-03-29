@@ -27,3 +27,4 @@ def format_input(string : str):
         params.remove("")
     string = ' '.join(params)
     return string.title()
+    

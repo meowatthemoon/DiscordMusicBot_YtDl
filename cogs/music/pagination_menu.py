@@ -23,7 +23,7 @@ class PaginationMenu(View):
         content = ""
         for i in range(start_idx, end_idx):
             index = i - start_idx
-            content += f"{emote_from_index(index = index)} - {self.tracks[i].get("title", "Untitled")}\n"
+            content += f"{emote_from_index(index = index)} {self.tracks[i].get("title", "Untitled")}\n"
             
         content = f"{header}\n{content}" if header != "" else content
         return content
@@ -54,7 +54,7 @@ class PaginationMenu(View):
         track = self.tracks[self.pivot + 4]
         await self.callback_fn(interaction = interaction, track = track, object = self)
 
-    @discord.ui.button(emoji = "6️⃣", row = 1, style = ButtonStyle.blurple)
+    """@discord.ui.button(emoji = "6️⃣", row = 1, style = ButtonStyle.blurple)
     async def button_6(self, interaction : Interaction, button : discord.ui.Button):
         track = self.tracks[self.pivot + 5]
         await self.callback_fn(interaction = interaction, track = track, object = self)
@@ -106,4 +106,4 @@ class PaginationMenu(View):
 
     @discord.ui.button(label = "▪️", row = 2, style = ButtonStyle.gray, disabled = True)
     async def button_placeholder3(self, interaction : Interaction, button : discord.ui.Button):
-        pass
+        pass"""

@@ -3,8 +3,20 @@ import asyncio
 import discord
 from discord import ButtonStyle, Interaction, Member, Message, VoiceClient
 from discord.ui import View
+import yt_dlp
+
 from cogs.music.queue import Queue
 from config import FFMPEG_OPTIONS, HISTORY_SIZE
+
+def extract_audio_url(url):
+    ydl_opts = {
+        "format": "bestaudio[abr<=96]/bestaudio",
+        "quiet": True
+    }
+
+    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+        info = ydl.extract_info(url, download=False)
+        return info["url"]
 
 class PlayerMenu(View):
     def __init__(self, bot):
@@ -33,7 +45,7 @@ class PlayerMenu(View):
         return await self.__play()
 
     async def __play(self) -> bool:
-        if self.__vc.is_playing():
+        if self.__vc.is_playing() or self.__vc.is_paused():
             return True
 
         return await self.__play_next_song()
@@ -65,6 +77,8 @@ class PlayerMenu(View):
 
         return True
     
+    
+
     async def __play_next_song(self) -> bool:
         track = self.__queue.pop_first_track()
         
@@ -80,14 +94,20 @@ class PlayerMenu(View):
         url = track["url"]
         print(f"Playing {track['title']} : {track['url']}")
 
-        source = discord.FFmpegOpusAudio(url, **FFMPEG_OPTIONS)
+        #source = discord.FFmpegOpusAudio(url, **FFMPEG_OPTIONS)
+        audio_url = await asyncio.get_running_loop().run_in_executor(
+            None,
+            lambda: extract_audio_url(url)
+        )
+
+        source = discord.FFmpegOpusAudio(audio_url, **FFMPEG_OPTIONS)
         def after_play(error):
             #if error:
             #    print(f"Error playing {track["title"]}: {error}")
             asyncio.run_coroutine_threadsafe(self.__play_next_song(), self.__bot.loop)
 
         self.__vc.play(source, after = after_play)
-        await self.__display(text = f"www.youtube.com/watch?v={track['id']}") 
+        await self.__display(text = f"https://www.youtube.com/watch?v={track['id']}") 
         return True
 
     @discord.ui.button(emoji = "⏮", row = 0, style = ButtonStyle.blurple)
@@ -125,7 +145,7 @@ class PlayerMenu(View):
 
     @discord.ui.button(emoji = "⏭", row = 0, style = ButtonStyle.blurple)
     async def button_next(self, interaction : Interaction, button : discord.ui.Button):
-        if self.__vc.is_playing:
+        if self.__vc.is_playing():
             self.__vc.stop()
         await interaction.response.defer()
 
@@ -144,7 +164,7 @@ class PlayerMenu(View):
 
     @discord.ui.button(emoji = "🔄", row = 1, style = ButtonStyle.blurple)
     async def button_replay(self, interaction : Interaction, button : discord.ui.Button):
-        if self.__vc is not None and not self.__vc.is_playing or self.__history.is_empty():
+        if self.__vc is None or (not self.__vc.is_playing() and self.__history.is_empty()):
             return
 
         track = self.__history.pop_last_track()

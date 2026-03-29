@@ -11,7 +11,7 @@ class Queue:
     def add_track_end(self, track : dict):
         self.tracks.append(track)
         if self.__max_length is not None:
-            self.tracks[-self.__max_length:]
+            self.tracks = self.tracks[-self.__max_length:]
     
     def pop_first_track(self) -> dict:
         if len(self.tracks) == 0:

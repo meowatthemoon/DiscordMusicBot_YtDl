@@ -1,5 +1,3 @@
-TOKEN = 'NjQ3MTE4NzIxOTE1Mjg5NjEy.GpRxvW.Du33LYkVDZHqaj5AYKjGEUlyZbw_jgVw4SPCLA'
-
 COGS_FOLDER = "./cogs"
 COMMAND_PREFIX = "!"
 
@@ -18,5 +16,6 @@ YDL_OPTIONS = {
     "format": "bestaudio[abr<=96]/bestaudio",
     "noplaylist": True,
     "youtube_include_dash_manifest": False,
-    "youtube_include_hls_manifest": False
+    "youtube_include_hls_manifest": False,
+    "extract_flat": True
 }
