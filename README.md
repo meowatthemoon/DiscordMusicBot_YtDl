@@ -4,7 +4,7 @@
 
 - [Install ffmpeg](https://www.ffmpeg.org/), and make sure it is in PATH (make sure ffmpeg is a recognized command).
 - Export your chrome cookies to a cookies.txt and place in the same folder as main.py.
-- Edit [config.py](https://github.com/meowatthemoon/DiscordMusicBot_YtDl/blob/main/config.py) and place your discord token.
+- Create a file named *secret.py*, and place your token there like : TOKEN = 'YOUR_TOKEN_HERE'
 
 # (Optional) Create and activate virtual environment
 
